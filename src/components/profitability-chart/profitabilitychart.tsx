@@ -1,4 +1,4 @@
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line } from 'recharts';
+import {AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line} from 'recharts';
 
 const Profitabilitychart = ({ revenue, expense }) => {
   // Group revenue and expense data by month
@@ -18,21 +18,42 @@ const Profitabilitychart = ({ revenue, expense }) => {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={combinedData}>
             <defs>
-              {/* ...your existing defs */}
+              {/* Revenue Gradient */}
+              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8aedba" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="#8aedba" stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id="descriptionRevenueGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8aedba" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#8aedba" stopOpacity={0.1} />
+              </linearGradient>
+
+              {/* Expense Gradient */}
+              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffcccb" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="#ffcccb" stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id="descriptionExpenseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffcccb" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#ffcccb" stopOpacity={0.1} />
+              </linearGradient>
             </defs>
+
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} vertical={false} />
             <XAxis dataKey="selectedMonth" tickLine={false} />
             <YAxis dataKey="revenue" axisLine={false} tickLine={false} tickFormatter={number => `$${number}`} />
-            <Tooltip />
 
-            {/* Revenue Area */}
             <Area type="monotone" dataKey="revenue" stroke="#8aedba" fill="url(#revenueGradient)" />
-
-            {/* Expense Area */}
             <Area type="monotone" dataKey="expense" stroke="#ffcccb" fill="url(#expenseGradient)" />
+            <LineChart data={combinedData}>
+              <Line
+                  type="monotone"
+                  dataKey="difference"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                  dot={false} />
+            </LineChart>
 
-            {/* Line chart for plotting the difference */}
-            <Line type="monotone" dataKey="difference" stroke="#8884d8" strokeWidth={2} dot={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
