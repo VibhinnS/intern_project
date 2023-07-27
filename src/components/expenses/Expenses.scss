@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800;900&display=swap');
+@import "../../styles/variables.scss";
+
+.expenses-content {
+  .body-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 42px;
+    padding-bottom: 15px;
+  }
+
+  .currency {
+    background-color: black;
+    color: white;
+    border: none;
+    font-size: 20px;
+
+    option {
+      background-color: #FFCCCB;
+      color: black;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    select::ms-expand {
+      display: none;
+    }
+  }
+
+  .MuiMenuItem-root {
+    background-color: #FFCCCB;
+    color: black;
+    padding: none;
+  }
+
+  .MuiSelect-icon {
+    color: #FFCCCB;
+  }
+
+  .form-container {
+    display: flex;
+    align-items: flex-start;
+    border: solid 1px white;
+    border-radius: 10px;
+    flex-direction: column;
+  }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-right: 15px;
+  }
+
+  .expenses-input,
+  .expenses-description {
+    margin-top: 12px;
+    height: 35px;
+    background-color: transparent;
+    border: solid 1px #FFCCCB;
+    border-radius: 10px;
+    color: white;
+    padding: 8px;
+    width: 220px;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 15px;
+  }
+
+  .expenses-display{
+    margin-top: 20px;
+  }
+
+  .error {
+    border: 2px solid red;
+  }
+  
+}
