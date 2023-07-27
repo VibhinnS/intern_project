@@ -2,41 +2,10 @@ import React, { useState, useEffect, MouseEventHandler } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import './Revenue.scss';
-
-
-interface BasicSelectProps {
-  currency: string;
-  handleChange: (event: SelectChangeEvent<string>, child: React.ReactNode) => void;
-}
-
-
-const BasicSelect: React.FC<BasicSelectProps> = ({ currency, handleChange }) => {
-  return (
-    <FormControl sx={{ m: 1, minWidth: 90 }} variant="standard">
-      <InputLabel id="currency-input" sx={{ color: '#8AEDBA' }}>
-        Currency
-      </InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="currency-input-field"
-        value={currency}
-        label="Currency"
-        onChange={handleChange}
-        sx={{
-          color: 'white',
-        }}
-      >
-        <MenuItem value={'USD'}>USD</MenuItem>
-        <MenuItem value={'EUR'}>EUR</MenuItem>
-        <MenuItem value={'GBP'}>GBP</MenuItem>
-      </Select>
-    </FormControl>
-  );
-};
 
 interface ContainedButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>;
@@ -72,7 +41,10 @@ const Revenue = ({ setInputValues, inputValues }) => {
   const [description, setDescription] = useState('');
   const [displayData, setDisplayData] = useState(false);
   const [isInputInvalid, setIsInputInvalid] = useState(false);
-
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const handleMonthChange = (event) => {
+      setSelectedMonth(event.target.value);
+  };
   const handleFormSubmit = (event) => {
     event.preventDefault();
   };
@@ -91,14 +63,15 @@ const Revenue = ({ setInputValues, inputValues }) => {
 
   const handleButtonClick = (event) => {
     event.preventDefault();
-    if (revenueValue.trim() === '' || description.trim() === '') {
+    if (revenueValue.trim() === '' || description.trim() === '' || selectedMonth.trim() === '') {
       setIsInputInvalid(true);
       return;
     }
 
-    setInputValues((prevInputValues) => [
+
+      setInputValues((prevInputValues) => [
       ...prevInputValues,
-      { currency, revenue: revenueValue, description },
+      { currency, revenue: revenueValue, description, selectedMonth },
     ]);
 
     setRevenueValue('');
@@ -118,7 +91,35 @@ const Revenue = ({ setInputValues, inputValues }) => {
       <form onSubmit={handleFormSubmit}>
         <div className="form-container">
           <div className="input-container">
-            <BasicSelect currency={currency} handleChange={handleChange} />
+              <FormControl sx={{m:1, minWidth: 120, paddingTop: '10px'}} variant="standard">
+                  <InputLabel id="month-input" sx={{color:'#8AEDBA', paddingTop: '10px'}}>
+                      Month
+                  </InputLabel>
+                  <Select
+                      labelId="month-select-label"
+                      id="month-select-field"
+                      value={selectedMonth}
+                      label="Month"
+                      onChange={handleMonthChange}
+                      className={`month-selection ${isInputInvalid ? 'error' : ''}`}
+                      sx={{
+                          color: 'white',
+                      }}
+                  >
+                      <MenuItem value={'January'}>January</MenuItem>
+                      <MenuItem value={'February'}>February</MenuItem>
+                      <MenuItem value={'March'}>March</MenuItem>
+                      <MenuItem value={'April'}>April</MenuItem>
+                      <MenuItem value={'May'}>May</MenuItem>
+                      <MenuItem value={'June'}>June</MenuItem>
+                      <MenuItem value={'July'}>July</MenuItem>
+                      <MenuItem value={'August'}>August</MenuItem>
+                      <MenuItem value={'September'}>September</MenuItem>
+                      <MenuItem value={'October'}>October</MenuItem>
+                      <MenuItem value={'November'}>November</MenuItem>
+                      <MenuItem value={'December'}>December</MenuItem>
+                  </Select>
+              </FormControl>
             <input
               type="number"
               className={`revenue-input ${isInputInvalid ? 'error' : ''}`}
@@ -153,7 +154,11 @@ const Revenue = ({ setInputValues, inputValues }) => {
           {inputValues.map((inputValue, index) => (
             <div key={index}>
               <p>
-                {inputValue.currency} {inputValue.revenue} : {inputValue.description}
+                  {inputValue.selectedMonth} : {inputValue.revenue}
+              </p>
+              <p>
+                  {inputValue.description}
+                  <hr />
               </p>
             </div>
           ))}

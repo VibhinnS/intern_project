@@ -1,24 +1,24 @@
 import "./Home.scss"
-import Expenses from "../../components/expenses/Expenses";
 import Profitabilitychart from "../../components/profitability-chart/profitabilitychart";
 import Revenue from "../../components/revenue/Revenue";
+import Expense from "../../components/expenses/Expenses";
 import { useState } from "react";
 
 const Home = () => {
-  const [inputValues, setInputValues] = useState([])
-  return (
+  const [inputRevenueValues, setRevenueInputValues] = useState([])
+  const [inputExpenseValues, setExpenseInputValues] = useState([])
+    return (
     <div className="home">
       <div className="box box1">
-        <Revenue setInputValues = {setInputValues} inputValues={inputValues}/>
+        <Revenue setInputValues = {setRevenueInputValues} inputValues={inputRevenueValues}/>
       </div>
       <div className="box box2">
-        <div id="chart-container" style={{ width: '100%', height: '400px', marginBottom: '0px' }} />
-        <Profitabilitychart data={inputValues}/>
+        <Profitabilitychart revenue={inputRevenueValues} expense={inputExpenseValues}/>
       </div>
       {/* <div className="box box3">Box3</div> */}
       <div className="box box4">
         <p className="box-heading">
-          <Expenses />
+          <Expense setInputValues={setExpenseInputValues} inputValues={inputExpenseValues}/>
         </p>
       </div>
       <div className="box box5">Box5</div>
