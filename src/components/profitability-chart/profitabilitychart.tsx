@@ -23,19 +23,16 @@ const Profitabilitychart = ({ revenue, expense }) => {
                 <stop offset="0%" stopColor="#8aedba" stopOpacity={0.4} />
                 <stop offset="100%" stopColor="#8aedba" stopOpacity={0.05} />
               </linearGradient>
-              <linearGradient id="descriptionRevenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#8aedba" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#8aedba" stopOpacity={0.1} />
-              </linearGradient>
 
               {/* Expense Gradient */}
               <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#ffcccb" stopOpacity={0.4} />
                 <stop offset="100%" stopColor="#ffcccb" stopOpacity={0.05} />
               </linearGradient>
-              <linearGradient id="descriptionExpenseGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ffcccb" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#ffcccb" stopOpacity={0.1} />
+
+              <linearGradient id="differenceGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="white" stopOpacity={0} />
+                <stop offset="0%" stopColor="white" stopOpacity={0} />
               </linearGradient>
             </defs>
 
@@ -45,15 +42,7 @@ const Profitabilitychart = ({ revenue, expense }) => {
 
             <Area type="monotone" dataKey="revenue" stroke="#8aedba" fill="url(#revenueGradient)" />
             <Area type="monotone" dataKey="expense" stroke="#ffcccb" fill="url(#expenseGradient)" />
-            <LineChart data={combinedData}>
-              <Line
-                  type="monotone"
-                  dataKey="difference"
-                  stroke="#8884d8"
-                  strokeWidth={2}
-                  dot={false} />
-            </LineChart>
-
+            <Area type="monotone" dataKey="difference" stroke="blue" strokeWidth={3} fill="url(#differenceGradient)"/>
           </AreaChart>
         </ResponsiveContainer>
       </div>
