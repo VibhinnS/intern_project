@@ -91,8 +91,8 @@ const Revenue = ({ setInputValues, inputValues }) => {
       <form onSubmit={handleFormSubmit}>
         <div className="form-container">
           <div className="input-container">
-              <FormControl sx={{m:1, minWidth: 120, paddingTop: '10px'}} variant="standard">
-                  <InputLabel id="month-input" sx={{color:'#8AEDBA', paddingTop: '10px'}}>
+              <FormControl sx={{m:1, minWidth: 120, paddingTop: '10px'}} variant="standard" className="month-dropdown">
+                  <InputLabel id="month-input" sx={{color:'#8AEDBA', paddingLeft: '10px'}}>
                       Month
                   </InputLabel>
                   <Select
