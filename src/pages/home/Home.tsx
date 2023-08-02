@@ -6,6 +6,8 @@ import {v4 as uuid} from "uuid";
 import { useState } from "react";
 import Firebase from "../../components/firebase/firebase";
 import "firebase/firestore";
+import MonthlyProfitability from "../../components/monthly-profitability/monthly-profitability";
+import MonthlyExpenses from "../../components/monthly-expenses/monthly-expenses";
 
 const Home = () => {
   const saveInput = (input) => {
@@ -26,8 +28,12 @@ const Home = () => {
         <Revenue setInputValues = {setRevenueInputValues} inputValues={inputRevenueValues}/>
       </div>
       {/* <div className="box box3">Box3</div> */}
-      <div className="box box5">Box5</div>
-      <div className="box box6">Box6</div>
+      <div className="box box5">
+        <MonthlyProfitability />
+      </div>
+      <div className="box box6">
+        <MonthlyExpenses />
+      </div>
       <div className="box box4">
           <Expense setInputValues={setExpenseInputValues} inputValues={inputExpenseValues}/>
       </div>

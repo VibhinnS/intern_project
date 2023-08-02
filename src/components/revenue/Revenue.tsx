@@ -49,10 +49,6 @@ const Revenue = ({ setInputValues, inputValues }) => {
     event.preventDefault();
   };
 
-  const handleChange = (event) => {
-    setCurrency(event.target.value);
-  };
-
   const handleRevenueInputChange = (event) => {
     setRevenueValue(event.target.value);
   };
