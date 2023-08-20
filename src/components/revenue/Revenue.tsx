@@ -32,11 +32,8 @@ const ContainedButton: React.FC<ContainedButtonProps> =({handleClick}) => {
   );
 };
 
-// interface RevenueProps {
-
-// }
 const Revenue = ({ setInputValues, inputValues }) => {
-  const [currency, setCurrency] = useState('');
+  const [currency] = useState('');
   const [revenueValue, setRevenueValue] = useState('');
   const [description, setDescription] = useState('');
   const [displayData, setDisplayData] = useState(false);
@@ -64,7 +61,6 @@ const Revenue = ({ setInputValues, inputValues }) => {
       return;
     }
 
-
       setInputValues((prevInputValues) => [
       ...prevInputValues,
       { currency, revenue: revenueValue, description, selectedMonth },
@@ -77,8 +73,6 @@ const Revenue = ({ setInputValues, inputValues }) => {
   };
 
   useEffect(() => {
-    // Remove this useEffect block to prevent resetting displayData after data is shown
-    // setDisplayData(false);
   }, [inputValues]);
 
   return (
@@ -154,7 +148,7 @@ const Revenue = ({ setInputValues, inputValues }) => {
               </p>
               <p>
                   {inputValue.description}
-                  <hr />
+                  <br />
               </p>
             </div>
           ))}

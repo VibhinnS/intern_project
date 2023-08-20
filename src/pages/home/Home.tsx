@@ -2,21 +2,12 @@ import "./Home.scss"
 import Profitabilitychart from "../../components/profitability-chart/profitabilitychart";
 import Revenue from "../../components/revenue/Revenue";
 import Expense from "../../components/expenses/Expenses";
-import {v4 as uuid} from "uuid";
 import { useState } from "react";
-import Firebase from "../../components/firebase/firebase";
 import "firebase/firestore";
 import MonthlyProfitability from "../../components/monthly-profitability/monthly-profitability";
 import MonthlyExpenses from "../../components/monthly-expenses/monthly-expenses";
 
 const Home = () => {
-  const saveInput = (input) => {
-    const saveToFireBase = Firebase.firestore();
-    saveToFireBase.collection("inputs").add({
-      id: uuid(),
-      item: input
-    })
-  }
   const [inputRevenueValues, setRevenueInputValues] = useState([])
   const [inputExpenseValues, setExpenseInputValues] = useState([])
     return (
@@ -29,7 +20,7 @@ const Home = () => {
       </div>
       {/* <div className="box box3">Box3</div> */}
       <div className="box box5">
-        <MonthlyProfitability />
+        <MonthlyProfitability revenue={inputRevenueValues}/>
       </div>
       <div className="box box6">
         <MonthlyExpenses />

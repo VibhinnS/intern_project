@@ -1,4 +1,5 @@
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line} from 'recharts';
+import MonthlyProfitability from '../monthly-profitability/monthly-profitability';
 
 const Profitabilitychart = ({ revenue, expense }) => {
   // Group revenue and expense data by month
@@ -8,9 +9,17 @@ const Profitabilitychart = ({ revenue, expense }) => {
     expense: expense.find((e) => e.selectedMonth === entry.selectedMonth)?.expense || 0,
   }));
 
-  combinedData.forEach((entry) => {
+  combinedData.forEach((entry, index) => {
     entry.difference = entry.revenue - entry.expense;
+
+  if (index > 0) {
+    const prevMonthDifference = combinedData[index - 1].difference;
+    entry.prevMonthProfitability = entry.difference - prevMonthDifference;
+  } else {
+    entry.prevMonthProfitability = entry.difference - 0
+  }
   });
+
 
   return (
       <div className='chart' style={{ width: '100%', height: '400px' }}>

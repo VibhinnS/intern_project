@@ -1,13 +1,34 @@
+import { useEffect, useState } from 'react';
 import './monthly-profitability.scss';
 
-const MonthlyProfitability = () => {
+const MonthlyProfitability = ({ revenue }) => {
+  const [combinedData, setCombinedData] = useState([]);
+
+  useEffect(() => {
+    const updatedData = revenue.map((entry, index) => {
+      const prevMonthRevenue = index > 0 ? revenue[index - 1].revenue : 0;
+      const prevMonthProfitability = entry.revenue - prevMonthRevenue;
+
+      return {
+        ...entry,
+        type: "revenue",
+        prevMonthProfitability,
+      };
+    });
+
+    setCombinedData(updatedData);
+  }, [revenue]);
+
   return (
     <div>
-      <h3 className="heading">Last Month Profitablity Comparison</h3>
-      <h1 className="numbers">+$1200</h1>
-      <p className="percentage">+66.6%</p>
+      {combinedData.map((entry, index) => (
+        <div key={index}>
+          <span>Prev Month Profitability: </span>
+          {entry.prevMonthProfitability}
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default MonthlyProfitability
+export default MonthlyProfitability;
