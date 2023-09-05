@@ -97,7 +97,7 @@ const Expense: React.FC = () => {
       } else {
        
         await updateDoc(doc(db, "expenses", docs.docs[0].id), {
-          revenue: [
+          expenses: [
             ...inputValues,
             { currency, expense: expenseValue, description, selectedMonth },
           ],
@@ -116,6 +116,7 @@ const Expense: React.FC = () => {
     try {
       const q = query(collection(db, "expenses"), where("email", "==", user.email));
       const docs = await getDocs(q);
+      if (docs.docs.length !== 0) {
       const docRef = doc(db, "expenses", docs.docs[0].id);
       const docSnap = await getDoc(docRef);
 
@@ -127,7 +128,7 @@ const Expense: React.FC = () => {
 } else {
   // docSnap.data() will be undefined in this case
   console.log("No such document!");
-}
+}}
       return 0;
     } catch (err) {
       console.log(err);
