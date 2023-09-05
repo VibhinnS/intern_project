@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import { addDoc, auth, collection, db, doc, getDocs, query, updateDoc, where } from '../../firebase';
 import './Revenue.scss';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { getDoc } from 'firebase/firestore';
 
 interface ContainedButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>;
@@ -78,6 +79,29 @@ const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<In
       ...prevInputValues,
       { currency, revenue: revenueValue, description, selectedMonth },
     ]);
+    if (user) {
+      const q = await query(collection(db, "revenue"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "revenue"), {
+          uid: user.uid,
+          email: user.email,
+          revenue: [
+            ...inputValues,
+            { currency, revenue: revenueValue, description, selectedMonth },
+          ],
+        });
+      } else {
+       
+        await updateDoc(doc(db, "revenue", docs.docs[0].id), {
+          revenue: [
+            ...inputValues,
+            { currency, revenue: revenueValue, description, selectedMonth },
+          ],
+        });
+      }
+
+    }
     setRevenueValue('');
     setDescription('');
     setIsInputInvalid(false);
@@ -103,19 +127,68 @@ const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<In
     }
   }
 
-  const getData = async () => {
+  const addToFirebaseCart = async () => {
+    if(user){
+    try {
+      const q = query(collection(db, "revenue"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "revenue"), {
+          uid: user.uid,
+          email: user.email,
+          revenue: inputValues,
+
+        });
+      } else {
+        await updateDoc(doc(db, "revenue", docs.docs[0].id), {
+          revenue: inputValues,
+        });
+      }
+      // return docs.docs;
+
+
+    if (docs.docs.length !== 0) {
+      docs.forEach((doc) => {
+        // previousCart.push(doc.data());
+        // setInputValues(doc.data().revenue);
+console.log(doc.data());
+      });
+      // return previousCart[0].cart;
+    }
+
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }}
+  };
+
+
+const getData = async () => {
     if (user) {
     try {
       const q = query(collection(db, "revenue"), where("email", "==", user.email));
       const docs = await getDocs(q);
       // const previousCart = [];
-      if (docs.docs.length !== 0) {
-        docs.forEach((doc) => {
-          // previousCart.push(doc.data());
-          console.log(doc.data().revenue);
-        });
-        // return previousCart[0].cart;
-      }
+      // if (docs.docs.length !== 0) {
+      //   docs.forEach((doc) => {
+      //     // previousCart.push(doc.data());
+      //     setInputValues(doc.data().revenue);
+      //     console.log(doc.data().revenue);
+      //   });
+      //   // return previousCart[0].cart;
+      // }
+      const docRef = doc(db, "revenue", docs.docs[0].id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data().revenue);
+      setDisplayData(true);
+
+  setInputValues(docSnap.data().revenue)
+} else {
+  // docSnap.data() will be undefined in this case
+  console.log("No such document!");
+}
       return 0;
     } catch (err) {
       console.log(err);
@@ -126,12 +199,9 @@ const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<In
   
   useEffect(()=>{
     getData();
-  }, [])
+  }, [user])
 
-  useEffect( () => {
-     setData();
-    // console.log(inputValues)
-  }, [inputValues]);
+
 
   return (
     <div className="revenue-content">
@@ -193,7 +263,11 @@ const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<In
               }}
             />
             <ContainedButton handleClick={async()=>{
-              await handleButtonClick(event)
+              await handleButtonClick(event);
+              // await setData();
+// const trial = addToFirebaseCart();
+              // console.log(trial);
+              // console.log(setData);
            }} />
           </div>
         </div>
