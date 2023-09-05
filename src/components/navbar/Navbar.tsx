@@ -1,6 +1,15 @@
-import "./Navbar.scss"
+import { GrLogout } from "react-icons/gr";
+import "./Navbar.scss";
+import { logOut } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleLogout =async() => {
+    await logOut();
+    await navigate("/")
+    
+  };
   return (
     <div className="navbar">
       <div className="log">
@@ -16,6 +25,7 @@ const Navbar = () => {
           <span>1</span>
         </div>
         <img src="/settings.svg" alt="" className="icon" />
+        <button onClick={handleLogout}><GrLogout color="white" className="text-lg" size="20px"/> Logout</button>
       </div>
     </div>
   )

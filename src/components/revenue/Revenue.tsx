@@ -1,17 +1,26 @@
-import React, { useState, useEffect, MouseEventHandler } from 'react';
+import React, { useState, useEffect, ChangeEvent, MouseEventHandler } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { addDoc, auth, collection, db, doc, getDocs, query, updateDoc, where } from '../../firebase';
 import './Revenue.scss';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface ContainedButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const ContainedButton: React.FC<ContainedButtonProps> =({handleClick}) => {
+interface InputValue {
+  currency: string;
+  revenue: string;
+  description: string;
+  selectedMonth: string;
+}
+
+const ContainedButton: React.FC<ContainedButtonProps> = ({ handleClick }) => {
   return (
     <Stack direction="row" spacing={2}>
       <Button
@@ -32,47 +41,96 @@ const ContainedButton: React.FC<ContainedButtonProps> =({handleClick}) => {
   );
 };
 
-const Revenue = ({ setInputValues, inputValues }) => {
+const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<InputValue[]>>, inputValues: InputValue[] }> = ({ setInputValues, inputValues }) => {
+  const [user] = useAuthState(auth);
   const [currency] = useState('');
   const [revenueValue, setRevenueValue] = useState('');
   const [description, setDescription] = useState('');
   const [displayData, setDisplayData] = useState(false);
   const [isInputInvalid, setIsInputInvalid] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('');
-  const handleMonthChange = (event) => {
-      setSelectedMonth(event.target.value);
+
+  const handleMonthChange = (event: ChangeEvent<{ value: unknown }>) => {
+    setSelectedMonth(event.target.value as string);
   };
-  const handleFormSubmit = (event) => {
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
-  const handleRevenueInputChange = (event) => {
+  const handleRevenueInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRevenueValue(event.target.value);
   };
 
-  const handleDescriptionInputChange = (event) => {
+  const handleDescriptionInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value);
   };
 
-  const handleButtonClick = (event) => {
+  const handleButtonClick = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
+
     if (revenueValue.trim() === '' || description.trim() === '' || selectedMonth.trim() === '') {
       setIsInputInvalid(true);
       return;
     }
 
-      setInputValues((prevInputValues) => [
+    setInputValues((prevInputValues) => [
       ...prevInputValues,
       { currency, revenue: revenueValue, description, selectedMonth },
     ]);
-
     setRevenueValue('');
     setDescription('');
     setIsInputInvalid(false);
     setDisplayData(true);
   };
+  const setData = async()=>{
+    if (user) {
+      const q = await query(collection(db, "revenue"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "revenue"), {
+          uid: user.uid,
+          email: user.email,
+          revenue: inputValues,
+        });
+      } else {
+       
+        await updateDoc(doc(db, "revenue", docs.docs[0].id), {
+          revenue: inputValues,
+        });
+      }
+      return docs.docs;
+    }
+  }
 
-  useEffect(() => {
+  const getData = async () => {
+    if (user) {
+    try {
+      const q = query(collection(db, "revenue"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      // const previousCart = [];
+      if (docs.docs.length !== 0) {
+        docs.forEach((doc) => {
+          // previousCart.push(doc.data());
+          console.log(doc.data().revenue);
+        });
+        // return previousCart[0].cart;
+      }
+      return 0;
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
+  }
+  };
+  
+  useEffect(()=>{
+    getData();
+  }, [])
+
+  useEffect( () => {
+     setData();
+    // console.log(inputValues)
   }, [inputValues]);
 
   return (
@@ -81,35 +139,35 @@ const Revenue = ({ setInputValues, inputValues }) => {
       <form onSubmit={handleFormSubmit}>
         <div className="form-container">
           <div className="input-container">
-              <FormControl sx={{m:1, minWidth: 120, paddingTop: '10px'}} variant="standard" className="month-dropdown">
-                  <InputLabel id="month-input" sx={{color:'#8AEDBA', paddingLeft: '10px'}}>
-                      Month
-                  </InputLabel>
-                  <Select
-                      labelId="month-select-label"
-                      id="month-select-field"
-                      value={selectedMonth}
-                      label="Month"
-                      onChange={handleMonthChange}
-                      className={`month-selection ${isInputInvalid ? 'error' : ''}`}
-                      sx={{
-                          color: 'white',
-                      }}
-                  >
-                      <MenuItem value={'January'}>January</MenuItem>
-                      <MenuItem value={'February'}>February</MenuItem>
-                      <MenuItem value={'March'}>March</MenuItem>
-                      <MenuItem value={'April'}>April</MenuItem>
-                      <MenuItem value={'May'}>May</MenuItem>
-                      <MenuItem value={'June'}>June</MenuItem>
-                      <MenuItem value={'July'}>July</MenuItem>
-                      <MenuItem value={'August'}>August</MenuItem>
-                      <MenuItem value={'September'}>September</MenuItem>
-                      <MenuItem value={'October'}>October</MenuItem>
-                      <MenuItem value={'November'}>November</MenuItem>
-                      <MenuItem value={'December'}>December</MenuItem>
-                  </Select>
-              </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120, paddingTop: '10px' }} variant="standard" className="month-dropdown">
+              <InputLabel id="month-input" sx={{ color: '#8AEDBA', paddingLeft: '10px' }}>
+                Month
+              </InputLabel>
+              <Select
+                labelId="month-select-label"
+                id="month-select-field"
+                value={selectedMonth}
+                label="Month"
+                onChange={handleMonthChange}
+                className={`month-selection ${isInputInvalid ? 'error' : ''}`}
+                sx={{
+                  color: 'white',
+                }}
+              >
+                <MenuItem value={'January'}>January</MenuItem>
+                <MenuItem value={'February'}>February</MenuItem>
+                <MenuItem value={'March'}>March</MenuItem>
+                <MenuItem value={'April'}>April</MenuItem>
+                <MenuItem value={'May'}>May</MenuItem>
+                <MenuItem value={'June'}>June</MenuItem>
+                <MenuItem value={'July'}>July</MenuItem>
+                <MenuItem value={'August'}>August</MenuItem>
+                <MenuItem value={'September'}>September</MenuItem>
+                <MenuItem value={'October'}>October</MenuItem>
+                <MenuItem value={'November'}>November</MenuItem>
+                <MenuItem value={'December'}>December</MenuItem>
+              </Select>
+            </FormControl>
             <input
               type="number"
               className={`revenue-input ${isInputInvalid ? 'error' : ''}`}
@@ -117,7 +175,7 @@ const Revenue = ({ setInputValues, inputValues }) => {
               value={revenueValue}
               onChange={handleRevenueInputChange}
               onKeyPress={(event) => {
-                if(event.key == 'Enter') {
+                if (event.key === 'Enter') {
                   handleButtonClick(event);
                 }
               }}
@@ -129,12 +187,14 @@ const Revenue = ({ setInputValues, inputValues }) => {
               value={description}
               onChange={handleDescriptionInputChange}
               onKeyPress={(event) => {
-                if(event.key == 'Enter') {
+                if (event.key === 'Enter') {
                   handleButtonClick(event);
                 }
               }}
             />
-            <ContainedButton handleClick={handleButtonClick} />
+            <ContainedButton handleClick={async()=>{
+              await handleButtonClick(event)
+           }} />
           </div>
         </div>
       </form>
@@ -144,11 +204,11 @@ const Revenue = ({ setInputValues, inputValues }) => {
           {inputValues.map((inputValue, index) => (
             <div key={index}>
               <p>
-                  {inputValue.selectedMonth} : {inputValue.revenue}
+                {inputValue.selectedMonth} : {inputValue.revenue}
               </p>
               <p>
-                  {inputValue.description}
-                  <br />
+                {inputValue.description}
+                <br />
               </p>
             </div>
           ))}

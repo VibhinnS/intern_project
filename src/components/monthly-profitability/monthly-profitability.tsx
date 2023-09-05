@@ -1,11 +1,24 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './monthly-profitability.scss';
 
-const MonthlyProfitability = ({ revenue }) => {
-  const [combinedData, setCombinedData] = useState([]);
+interface RevenueItem {
+  revenue: number;
+}
+
+interface CombinedDataItem extends RevenueItem {
+  type: string;
+  prevMonthProfitability: number;
+}
+
+interface MonthlyProfitabilityProps {
+  revenue: RevenueItem[];
+}
+
+const MonthlyProfitability: React.FC<MonthlyProfitabilityProps> = ({ revenue }) => {
+  const [combinedData, setCombinedData] = useState<CombinedDataItem[]>([]);
 
   useEffect(() => {
-    const updatedData = revenue.map((entry, index) => {
+    const updatedData: CombinedDataItem[] = revenue.map((entry, index) => {
       const prevMonthRevenue = index > 0 ? revenue[index - 1].revenue : 0;
       const prevMonthProfitability = entry.revenue - prevMonthRevenue;
 

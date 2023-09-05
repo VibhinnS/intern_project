@@ -6,21 +6,25 @@ import {
 } from "react-router-dom";
 import Users from "./pages/users/Users";
 import Products from "./pages/products/Products";
-import Login from "./pages/login/Login";
+// import Login from "./pages/login/Login";
+
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import Menu from "./components/menu/Menu";
 import "./styles/global.scss";
+import Main from "./pages/main/Main";
+import LandingPage from "./pages/landing/landingPage";
+import LOGIN from "./components/login/login";
 
 function App() {
   const Layout = ()=> {
     return (
       <div className="main">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="container">
-          <div className="menuContainer">
+          {/* <div className="menuContainer">
             <Menu />
-          </div>
+          </div> */}
           <div className="contentContainer">
             <Outlet />
           </div>
@@ -37,12 +41,12 @@ function App() {
       children:[
         {
           path:"/",
-          element: <Home/>
+          element: <LandingPage/>
         },
-        // {
-        //   path:"/dashboard",
-        //   element: <Home/>
-        // },
+        {
+          path:"/dashboard",
+          element: <Main/>
+        },
         {
           path:"/users",
           element: <Users/>
@@ -51,12 +55,12 @@ function App() {
           path:"/products",
           element: <Products/>
         },
+        {
+          path: "/login",
+          element: <LOGIN />
+        }
       ]
     },
-    {
-      path: "/login",
-      element: <Login />
-    }
   ]);
   
 

@@ -8,10 +8,10 @@
     padding: 0;
     box-sizing: border-box;
     font-family: PP mori;
-    color: #fff;
 }
 
 html, body {
+    color: #fff;
     height: 100%;
     width: 100%;
 }
@@ -21,7 +21,7 @@ html, body {
     top: 0;
     position: fixed;
     z-index: 100;
-    background-color: #EDBFFF;
+    background-color: #8aedb8;
     opacity: 0;
     display: none;
     transition: opacity ease 1s;
@@ -32,7 +32,7 @@ html, body {
     width: 20px;
     border-radius: 50%;
     position: fixed;
-    background-color: #EDBFFF;
+    background-color: #8aedb8;
     z-index: 8;
     transition: background-image ease 0.5s;
     background-position: center;
@@ -51,15 +51,30 @@ html, body {
     z-index: 9;
     padding-top: 12vw;
 }
+.brand-logos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    place-items: center;
+}
 
+.brand-logos img{
+    height: 20%;
+    max-width: 20%;
+    width: auto;
+    padding: 40px;
+    align-items: center;
+    justify-content: center;
 
+}
 #nav{
     height: 55px;
     width: 100%;
     /* background-color: red; */
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 0 30px;
     position: fixed;
     mix-blend-mode: difference;
@@ -106,6 +121,21 @@ html, body {
     margin-left: 26vw;
 }
 
+.action-text1{
+    font: PP Mori;
+    color: black;
+    padding-left: 100px;
+    padding-top: 100px;
+    font-size: 130px;
+}
+
+.action-text2{
+    font: PP Mori;
+    color: black;
+    padding-left: 100px;
+    font-size: 130px;
+}
+
 .page1 video{
     width: 60%;
     margin-top: 10vw;
@@ -140,7 +170,7 @@ html, body {
 }
 .page2-left{
     /* background-color: blue; */
-    width: 40%;
+    width: 46%;
 }
 .page2-right{
     /* background-color: blue; */
@@ -161,7 +191,7 @@ html, body {
     border-radius: 50px;
     border: none;
     padding: 4px 0;
-    background-color: #EDBFFF;
+    background-color: #8aedb8;
     color: #111;
     margin-top: 20px;
 }
@@ -235,7 +265,7 @@ html, body {
 
 .elem:hover h1{
     transform: translateY(-100%);
-    color: #EDBFFF;
+    color: #8aedb8;
 }
 .elem:hover img{
     opacity: 1;
@@ -276,5 +306,164 @@ html, body {
 footer{
     height: 90vh;
     width: 100%;
-    background-color: #EDBFFF;
+    background-color: #8aedb8;
 }
+
+/* button {
+ position: relative;
+ display: inline-block;
+ cursor: pointer;
+ outline: none;
+ border: 0;
+ vertical-align: middle;
+ text-decoration: none;
+ background: transparent;
+ padding: 0;
+ font-size: inherit;
+ font-family: inherit;
+}
+
+button.learn-more {
+ width: 12rem;
+ height: auto;
+}
+
+button.learn-more .circle {
+ transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+ position: relative;
+ display: block;
+ margin: 0;
+ width: 3rem;
+ height: 3rem;
+ background: #282936;
+ border-radius: 1.625rem;
+}
+
+button.learn-more .circle .icon {
+ transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+ position: absolute;
+ top: 0;
+ bottom: 0;
+ margin: auto;
+ background: #fff;
+}
+
+button.learn-more .circle .icon.arrow {
+ transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+ left: 0.625rem;
+ width: 1.125rem;
+ height: 0.125rem;
+ background: none;
+}
+
+button.learn-more .circle .icon.arrow::before {
+ position: absolute;
+ content: "";
+ top: -0.29rem;
+ right: 0.0625rem;
+ width: 0.625rem;
+ height: 0.625rem;
+ border-top: 0.125rem solid #fff;
+ border-right: 0.125rem solid #fff;
+ transform: rotate(45deg);
+}
+
+button.learn-more .button-text {
+ transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ padding: 0.75rem 0;
+ margin: 0 0 0 1.85rem;
+ color: #282936;
+ font-weight: 700;
+ line-height: 1.6;
+ text-align: center;
+ text-transform: uppercase;
+}
+
+button:hover .circle {
+ width: 100%;
+}
+
+button:hover .circle .icon.arrow {
+ background: #fff;
+ transform: translate(1rem, 0);
+}
+
+button:hover .button-text {
+ color: #fff;
+} */
+
+.login-button{
+    color: black;
+    background-color: #8aedb8;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 20px;
+    font-family: PP Mori;
+    margin-top: 20px;
+    font-size: 19px;
+}
+
+/* CSS styles for the Box component */
+.bg-transparent {
+    background-color: transparent;
+  }
+  
+  .rounded-2xl {
+    border-radius: 1rem; /* You can adjust the value as needed */
+  }
+  
+  /* CSS styles for the inner div */
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  
+  .bg-white {
+    background-color: #8aedba;
+  }
+  
+  
+  .rounded-2xl {
+    border-radius: 1rem; /* You can adjust the value as needed */
+  }
+  
+  /* CSS styles for the close button */
+  .absolute {
+    position: absolute;
+  }
+  
+  .right-4 {
+    right: 1rem;
+  }
+  
+  .top-4 {
+    top: 1rem;
+  }
+  
+  .rounded-full {
+    border-radius: 50%;
+  }
+  
+  .p-2 {
+    padding: 0.5rem;
+  }
+  
+  .duration-200 {
+    transition-duration: 0.2s;
+  }
+  
+  .cursor-pointer {
+    cursor: pointer;
+  }
+    

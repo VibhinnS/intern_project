@@ -1,79 +1,111 @@
-import { initializeApp } from "firebase/app";
-import {GoogleAuthProvider,getAuth,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,sendPasswordResetEmail,signOut} from "firebase/auth";
-import {getFirestore,query,getDocs,collection,where,addDoc} from "firebase/firestore";
+// Import the functions you need from the SDKs you need
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getAuth, Auth, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider } from "firebase/auth";
 
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  Firestore,
+  getFirestore,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+
+// Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBKB5_7SwHQc8sa8gPpT1IuAKYuIwBbn34",
-    authDomain: "profitsio.firebaseapp.com",
-    projectId: "profitsio",
-    storageBucket: "profitsio.appspot.com",
-    messagingSenderId: "944929322277",
-    appId: "1:944929322277:web:bea16f09a526a3bc5f16cc",
-    measurementId: "G-MGTCYXJYP4"
+  apiKey: "AIzaSyBKB5_7SwHQc8sa8gPpT1IuAKYuIwBbn34",
+  authDomain: "profitsio.firebaseapp.com",
+  projectId: "profitsio",
+  storageBucket: "profitsio.appspot.com",
+  messagingSenderId: "944929322277",
+  appId: "1:944929322277:web:bea16f09a526a3bc5f16cc",
+  measurementId: "G-MGTCYXJYP4"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Initialize Firebase
+const app: FirebaseApp = initializeApp(firebaseConfig);
+const auth: Auth = getAuth(app);
+const db: Firestore = getFirestore(app);
 
-const googleProvider = new GoogleAuthProvider();
-const signInWithGoogle = async () => {
-    try {
-        const res = await signInWithPopup(auth, googleProvider);
-        const user = res.user;
-        const q = query(collection(db, "users"), where("uid", "==", user.uid));
-        const docs = await getDocs(q);
-        if (docs.docs.length === 0) {
-            await addDoc(collection(db, "users"), {
-                uid: user.uid,
-                name: user.displayName,
-                authProvider: "google",
-                email: user.email,
-            });
-        }
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+const createUser = (email: string, password: string): Promise<UserCredential> => {
+  return createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential: UserCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log(user);
+      return userCredential;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+      throw error;
+    });
 };
 
-const logInWithEmailAndPassword = async (email, password) => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+const signInWithEmail = (email: string, password: string): Promise<UserCredential> => {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential: UserCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log(user);
+      return userCredential;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+      throw error;
+    });
 };
 
-const registerWithEmailAndPassword = async (name, email, password) => {
-    try {
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-        const user = res.user;
-        await addDoc(collection(db, "users"), {
-            uid: user.uid,
-            name,
-            authProvider: "local",
-            email,
-        });
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+const googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
+
+const logOut = (): void => {
+  signOut(auth)
+  console.log("Logged Out nigga!")
 };
 
-const sendPasswordReset = async (email) => {
-    try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Password reset link sent!");
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+const getUser = async (user) => {
+  const q = query(collection(db, "users"), where("uid", "==", user.uid));
+  let userDetails = [];
+  const docs = await getDocs(q);
+  docs.forEach((doc) => {
+    // console.log(doc.data());
+    userDetails.push(doc.data());
+  });
+  return userDetails[0];
 };
 
-const logout = () => {
-    signOut(auth);
+export {
+  app,
+  auth,
+  Firestore,
+  db,
+  googleProvider,
+  createUser,
+  signInWithEmail,
+  logOut,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+  updateDoc,
+  doc,
+  getUser
 };
 
+// Example of using useAuthState hook
+const useAuth = () => {
+  const [user] = useAuthState(auth);
+  return user;
+};
+
+export default useAuth;
