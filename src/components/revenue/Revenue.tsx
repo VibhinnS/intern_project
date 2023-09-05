@@ -107,60 +107,9 @@ const Revenue: React.FC<{ setInputValues: React.Dispatch<React.SetStateAction<In
     setIsInputInvalid(false);
     setDisplayData(true);
   };
-  const setData = async()=>{
-    if (user) {
-      const q = await query(collection(db, "revenue"), where("email", "==", user.email));
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "revenue"), {
-          uid: user.uid,
-          email: user.email,
-          revenue: inputValues,
-        });
-      } else {
-       
-        await updateDoc(doc(db, "revenue", docs.docs[0].id), {
-          revenue: inputValues,
-        });
-      }
-      return docs.docs;
-    }
-  }
-
-  const addToFirebaseCart = async () => {
-    if(user){
-    try {
-      const q = query(collection(db, "revenue"), where("email", "==", user.email));
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "revenue"), {
-          uid: user.uid,
-          email: user.email,
-          revenue: inputValues,
-
-        });
-      } else {
-        await updateDoc(doc(db, "revenue", docs.docs[0].id), {
-          revenue: inputValues,
-        });
-      }
-      // return docs.docs;
 
 
-    if (docs.docs.length !== 0) {
-      docs.forEach((doc) => {
-        // previousCart.push(doc.data());
-        // setInputValues(doc.data().revenue);
-console.log(doc.data());
-      });
-      // return previousCart[0].cart;
-    }
 
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }}
-  };
 
 
 const getData = async () => {
@@ -168,15 +117,6 @@ const getData = async () => {
     try {
       const q = query(collection(db, "revenue"), where("email", "==", user.email));
       const docs = await getDocs(q);
-      // const previousCart = [];
-      // if (docs.docs.length !== 0) {
-      //   docs.forEach((doc) => {
-      //     // previousCart.push(doc.data());
-      //     setInputValues(doc.data().revenue);
-      //     console.log(doc.data().revenue);
-      //   });
-      //   // return previousCart[0].cart;
-      // }
       const docRef = doc(db, "revenue", docs.docs[0].id);
       const docSnap = await getDoc(docRef);
 
@@ -264,10 +204,7 @@ const getData = async () => {
             />
             <ContainedButton handleClick={async()=>{
               await handleButtonClick(event);
-              // await setData();
-// const trial = addToFirebaseCart();
-              // console.log(trial);
-              // console.log(setData);
+
            }} />
           </div>
         </div>

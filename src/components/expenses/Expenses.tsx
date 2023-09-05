@@ -6,6 +6,10 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import './Expenses.scss';
+import { addDoc, auth, collection, db, doc, getDocs, query, updateDoc, where } from '../../firebase';
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getDoc } from 'firebase/firestore';
 
 interface ExpenseItem {
   currency: string;
@@ -40,6 +44,8 @@ const ContainedButton: React.FC<ContainedButtonProps> = ({ handleClick }) => {
 };
 
 const Expense: React.FC = () => {
+  const [user] = useAuthState(auth);
+
   const [currency] = useState<string>('');
   const [expenseValue, setExpenseValue] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -64,7 +70,7 @@ const Expense: React.FC = () => {
     setDescription(event.target.value);
   };
 
-  const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleButtonClick = async(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (expenseValue.trim() === '' || description.trim() === '' || selectedMonth.trim() === '') {
       setIsInputInvalid(true);
@@ -76,13 +82,63 @@ const Expense: React.FC = () => {
       { currency, expense: expenseValue, description, selectedMonth },
     ]);
 
+    if (user) {
+      const q = await query(collection(db, "expenses"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "expenses"), {
+          uid: user.uid,
+          email: user.email,
+          expenses: [
+            ...inputValues,
+            { currency, expense: expenseValue, description, selectedMonth },
+          ],
+        });
+      } else {
+       
+        await updateDoc(doc(db, "expenses", docs.docs[0].id), {
+          revenue: [
+            ...inputValues,
+            { currency, expense: expenseValue, description, selectedMonth },
+          ],
+        });
+      }
+
+    }
     setExpenseValue('');
     setDescription('');
     setIsInputInvalid(false);
     setDisplayData(true);
   };
 
-  useEffect(() => {}, [inputValues]);
+  const getData = async () => {
+    if (user) {
+    try {
+      const q = query(collection(db, "expenses"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+      const docRef = doc(db, "expenses", docs.docs[0].id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data().expenses);
+      setDisplayData(true);
+
+  setInputValues(docSnap.data().expenses)
+} else {
+  // docSnap.data() will be undefined in this case
+  console.log("No such document!");
+}
+      return 0;
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
+  }
+  };
+
+  useEffect(()=>{
+    getData();
+  }, [user])
 
   return (
     <div className="expenses-content">
@@ -143,7 +199,10 @@ const Expense: React.FC = () => {
                 }
               }}
             />
-            <ContainedButton handleClick={handleButtonClick} />
+            <ContainedButton handleClick={async()=>{
+              await handleButtonClick(event);
+
+           }} />
           </div>
         </div>
       </form>
