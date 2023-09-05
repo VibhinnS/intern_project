@@ -1,5 +1,8 @@
 @import "../../styles/variables.scss";
-
+@font-face {
+    font-family: PP mori;
+    src: url(src/assets/ppmori.ttf);
+  }
 .home{
 
     display: grid;

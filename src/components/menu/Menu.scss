@@ -1,6 +1,9 @@
 @import "../../styles/variables.scss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800;900&display=swap');
-
+@font-face {
+    font-family: PP mori;
+    src: url(src\assets\ppmori.ttf);
+  }
 .menu{
     
     .item{
@@ -12,7 +15,7 @@
         .title{
             font-size: 12px;
             font-weight: 200;
-            color: $soft-color
+            color: #ddd
         }
 
         .listItem{

@@ -39,6 +39,10 @@ function App() {
           path:"/",
           element: <Home/>
         },
+        // {
+        //   path:"/dashboard",
+        //   element: <Home/>
+        // },
         {
           path:"/users",
           element: <Users/>

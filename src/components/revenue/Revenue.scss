@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800;900&display=swap');
 @import "../../styles/variables.scss";
-
+@font-face {
+  font-family: PP mori;
+  src: url(src/assets/ppmori.ttf);
+}
 .revenue-content {
   .body-heading {
-    font-family: 'Poppins', sans-serif;
+    font-family: PP mori;
     font-size: 42px;
     padding-bottom: 15px;
   }
@@ -17,7 +20,7 @@
     option {
       background-color: #8AEBD8;
       color: black;
-      font-family: 'Poppins', sans-serif;
+      font-family: PP mori;
     }
 
     select::ms-expand {
@@ -61,7 +64,7 @@
     color: white;
     padding: 8px;
     width: 220px;
-    font-family: 'Poppins', sans-serif;
+    font-family: PP mori;
     margin-left: 15px;
   }
 

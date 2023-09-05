@@ -19,7 +19,7 @@ const ContainedButton: React.FC<ContainedButtonProps> =({handleClick}) => {
         sx={{
           backgroundColor: '#8AEDBA',
           color: 'black',
-          fontFamily: 'Poppins',
+          fontFamily: 'PP mori',
           fontWeight: 'bold',
           marginBottom: '15px',
           marginTop: '10px',
